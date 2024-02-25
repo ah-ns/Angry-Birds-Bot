@@ -2,8 +2,8 @@ import cv2 as cv
 import numpy as np
 import os
 
+# Makes sure the working directory is the one this file is in
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Purpose: Debugging - resizes image to see where detections occur more closely
 def resize_image(image):
@@ -21,7 +21,7 @@ def find_by_image(haystack_name, needle_name, threshold):
     haystack_img = cv.imread(haystack_name, cv.IMREAD_COLOR)
     needle_img = cv.imread(needle_name, cv.IMREAD_COLOR)
 
-    # The reason width is the first value is because shape is (row, column), not (x, y). 
+    # The reason width is the first value is because shape is (row, column), not like (x, y). 
     # The row is referenced first in arrays so this is the cause of the notation...
     needle_w = np.shape(needle_img)[0]
     needle_h = np.shape(needle_img)[1]
@@ -29,14 +29,16 @@ def find_by_image(haystack_name, needle_name, threshold):
     result = cv.matchTemplate(haystack_img, needle_img, cv.TM_CCOEFF_NORMED)
 
     # Only want places where the confidence is at least 75% 
-    # 'Where' function results in a list of x values and a list of y values
+    # 'Where' function results in a list of row values and a list of column values
     locations = np.where(result >= threshold)
-    # Using 'zip' function to combine x and y value lists
+    # Using 'zip' function to combine x and y value lists, stepping in reverse through the row and column lists to create a 2D list with each element being a row,col pair
     locations = list(zip(locations[::-1][0], locations[::-1][1]))
 
+    # For each row,col pair in locations
     for location in locations:
+        # Each location found will correspond to the top left of the needle image
         top_left = location
-        # The reason you add height is beacuse it is referencing an index, not a coordinate
+        # The reason you add height is beacuse it is referencing an index(row), not a coordinate, the higher the index in a list, the closer to the end.
         bottom_right = location[0] + needle_h, location[1] + needle_w
         # cv2.rectangle(image, start_point, end_point, color, thickness)
         cv.rectangle(haystack_img, top_left, bottom_right, color=(255,0,255), thickness=2)
@@ -76,8 +78,10 @@ def find_by_color(color_array, threshold, target_color, gap_color1, gap_color2):
 # Parameters: original locations of found objects, w, h, how far the condensation will occur from
 # Return: list with x, y, w, h for each of the condensed rectangles
 def condense_rectangles(locations, w, h, distance_threshold):
+    # Each rectangle will have its location in the form of x, y, w, h
     rectangles = [[int(location[0]), int(location[1]), w, h] for location in locations]
     
+    # Group the rectangles based on their proximity to one another
     return cv.groupRectangles(rectangles, 1, distance_threshold)
 
 # Purpose: Draws on the image to show where detections have occurred
@@ -99,7 +103,7 @@ def display_image(image_name, locations):
 
 def main():
     """ example usage"""
-    haystack_img = "default_level_1_2.jpg"
+    haystack_img = "Image.jpg"
 
     #needle_img = resize_image()
 
@@ -108,6 +112,7 @@ def main():
     # Find pigs
     locations = find_by_color(haystack_color_array, 225, "g", 150, 150)
     condensed_locations, _ = condense_rectangles(locations, 2, 2, 5)
+
 
     display_image(haystack_img, condensed_locations)
     
