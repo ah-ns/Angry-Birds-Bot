@@ -15,6 +15,7 @@ def resize_image(image):
     # Returns the specified image with transformed dimensions and interpolation formula (explained here -> https://docs.opencv.org/4.x/da/d54/group__imgproc__transform.html#ga5bb5a1fea74ea38e1a5445ca803ff121)
     return cv.resize(image, dim, interpolation = cv.INTER_AREA)
 
+# Purpose: Uses template matching to find an image within another image
 def find_by_image(haystack_name, needle_name, threshold):
     # Template Matching Example: https://docs.opencv.org/4.x/d4/dc6/tutorial_py_template_matching.html
     haystack_img = cv.imread(haystack_name, cv.IMREAD_COLOR)
@@ -44,11 +45,11 @@ def find_by_image(haystack_name, needle_name, threshold):
 
 # Purpose: Turns an image into an array representing rgb values of pixels
 def image_color_array(img_name):
-    image = cv.imread(img_name, cv.IMREAD_UNCHANGED)
+    image = cv.imread(img_name, cv.IMREAD_COLOR)
     return np.array(image, dtype=np.uint8) # uint8 is used because rgb only ranges from 0-255, only 8 bits
 
 # Purpose: Finds objects based on their color
-# target color is the color closest to the color you want to find
+# Parameters: target color is the color closest to the color you want to find...
 # gap_color1 and 2 are the minimum diffence in value you want the other colors to be from the target color
 def find_by_color(color_array, threshold, target_color, gap_color1, gap_color2):
     locations = []
@@ -97,18 +98,18 @@ def display_image(image_name, locations):
     cv.waitKey()
 
 def main():
-    """ example usage
-    haystack_img = cv.imread("ab_level_6.jpg", cv.IMREAD_UNCHANGED)
+    """ example usage"""
+    haystack_img = "default_level_1_2.jpg"
 
     #needle_img = resize_image()
 
-    haystack_color_array = image_color_array(haystack)
+    haystack_color_array = image_color_array(haystack_img)
 
     # Find pigs
     locations = find_by_color(haystack_color_array, 225, "g", 150, 150)
     condensed_locations, _ = condense_rectangles(locations, 2, 2, 5)
 
     display_image(haystack_img, condensed_locations)
-    """
+    
 if __name__ == "__main__":
     main()
