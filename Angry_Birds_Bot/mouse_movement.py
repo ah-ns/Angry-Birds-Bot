@@ -21,8 +21,16 @@ def polar_to_cartesian(r, theta):
     return x, y
 
 # Purpose: return the launch angle in degrees to hit the lowest detected pig
-def find_launch_angle(pig_locations):
-    pass
+def find_launch_angle(pig_locations, window_scale, x, y):
+    gravity             = 78.28 * window_scale
+    horizontal_velocity = x
+    vertical_velocity   = y
+
+    interval = .5
+    arc_coordinates = [tuple([horizontal_velocity * sec * interval, (vertical_velocity * sec * interval) - (.5 * gravity * (sec**2) * interval)]) for sec in range(0, 6)]
+    print(arc_coordinates)
+
+find_launch_angle([0], 1, 113, 0)
 
 # Determines where the slingshot is located on the screen, then pulls the slingshot
 def slingshot(window_loc, window_scale):
@@ -57,4 +65,4 @@ def main():
 
     slingshot(window_loc, window_scale)
 
-main()
+#main()
