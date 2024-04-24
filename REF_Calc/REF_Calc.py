@@ -50,7 +50,6 @@ def main():
     
     # Fill the matrix
     matrix = [[0] * n] * m
-    print(matrix)
     for i in range(m):
         for j in range(n):
             value = check_int(f"Cell {i}, {j}:\n")
