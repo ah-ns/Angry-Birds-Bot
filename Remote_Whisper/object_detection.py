@@ -59,8 +59,13 @@ def find_by_image(haystack_name: str, needle_name: str, threshold: float) -> lis
 
     return locations
 
-# Purpose: Turns an image into an array representing rgb values of pixels
 def image_color_array(img_name: str) -> np.array:
+    """ Turns an image into an array representing rgb values of pixels
+    
+    :param str img_name: Image file path
+    :return: numpy array of color pixels
+    :rtype: array uint8
+    """
     image = cv.imread(img_name, cv.IMREAD_COLOR)
     return np.array(image, dtype=np.uint8) # uint8 is used because rgb only ranges from 0-255, only 8 bits
 
