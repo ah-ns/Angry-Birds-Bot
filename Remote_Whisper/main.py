@@ -6,6 +6,12 @@ from email_whisper import send_email
 
 # Find the area to be monitored
 def get_image(path: str) -> list[int, int, int, int]:
+    """ Gets image corners to search within
+
+    :param str path: Where to save the image
+    :return: window_bounds
+    :rtype: list[int, int, int, int]
+    """
     window.swap_window("Warframe")
 
     # Find the bounds of the chat box with open cv
