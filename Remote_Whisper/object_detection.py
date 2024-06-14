@@ -5,8 +5,12 @@ import os
 # Makes sure the working directory is the one this file is in
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-# Purpose: Debugging - resizes image to see where detections occur more closely
 def resize_image(image: str):
+    """ Resizes image to see where deterctions occur more closely
+
+    :param str image: The file path of the image
+    :return: resized image
+    """
     scale_percent = 500 # percent of original size
     width = int(image.shape[1] * scale_percent / 100)
     height = int(image.shape[0] * scale_percent / 100)
@@ -16,8 +20,15 @@ def resize_image(image: str):
     # (explained here -> https://docs.opencv.org/4.x/da/d54/group__imgproc__transform.html#ga5bb5a1fea74ea38e1a5445ca803ff121)
     return cv.resize(image, dim, interpolation = cv.INTER_AREA)
 
-# Purpose: Uses template matching to find an image within another image
 def find_by_image(haystack_name: str, needle_name: str, threshold: float) -> list[list[int, int]]:
+    """ Uses template matching to find needle image within haystack image
+
+    :param str haystack_name: Name of the haystack image
+    :param str needle_name: Name of the needle image
+    :param float threshold: Confidence threshold for finding images
+    :return: locations of possible needle images
+    :rtype: list[list[int, int]]
+    """
     # Template Matching Example: https://docs.opencv.org/4.x/d4/dc6/tutorial_py_template_matching.html
     haystack_img = cv.imread(haystack_name, cv.IMREAD_COLOR)
     needle_img = cv.imread(needle_name, cv.IMREAD_COLOR)
